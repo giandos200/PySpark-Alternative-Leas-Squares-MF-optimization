@@ -21,14 +21,13 @@ if __name__ == '__main__':
     first_row_is_header = "true"
     delimiter = ","
     seed = 42
-
     spark = SparkSession.builder.appName('RecommendationPipeline_Cornacchia_Malitesta').getOrCreate()
 
     df = dataLoader(spark, file_location, file_type, infer_schema, first_row_is_header, delimiter)
 
-    df = Sampling('usersss',df,0.8,seed)
+    df = Sampling('user',df,0.8,seed)
 
-    df = Kcore(df, K=10)
+    df = Kcore(df, K=5)
 
     print_hi('PyCharm')
 
