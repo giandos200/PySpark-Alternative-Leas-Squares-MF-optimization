@@ -30,6 +30,6 @@ def dataLoader(Session, path: str, fileType: str, inferSchema: bool, header: boo
     stringIndexer = StringIndexer(inputCol="title", outputCol="title_new")
 
     model = stringIndexer.fit(df)
-    indexed = model.transform(df)
+    mappedData = model.transform(df)
 
-    return indexed
+    return mappedData

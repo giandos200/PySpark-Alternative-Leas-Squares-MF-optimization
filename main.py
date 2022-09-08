@@ -1,8 +1,10 @@
 # This is a sample Python script.
 from pyspark.sql import SparkSession
 from src.dataLoader import dataLoader
+from src.splitting import splitting
 from src.preprocessing.Sampling import Sampling
 from src.preprocessing.Kcore import Kcore
+from src.model import trainModel,evaluateModel
 from pyspark.sql.functions import *
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
@@ -29,6 +31,8 @@ if __name__ == '__main__':
 
     df = Kcore(df, K=5)
 
-    print_hi('PyCharm')
+    train, test = splitting(df,type='LeaveOneOut',seed=42,split=0.8, Session = spark)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    rec = trainModel(train, model='ALS')
+
+    tabular = evaluateModel(df, train, test, rec, topK=10, session=spark)
