@@ -1,6 +1,6 @@
 from pyspark.sql.dataframe import DataFrame
 
-def Sampling(type: str, data: DataFrame, percentage: int, seed: int)-> "DataFrame":
+def Sampling(type: str, data: DataFrame, percentage: float, seed: int)-> "DataFrame":
     if type in ["user", "item", "interactions"]:
         if type == "interactions":
             data = data.sample(withReplacement=False,fraction=percentage, seed=seed)

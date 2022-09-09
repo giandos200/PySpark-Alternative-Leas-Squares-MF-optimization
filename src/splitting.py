@@ -1,11 +1,13 @@
 import random
+import pandas as pd
+
 from typing import Tuple
 
 from pyspark.sql.dataframe import DataFrame
 
 
 def splitting(df: DataFrame, type: str, seed: int, split=0.8, Session = None)-> Tuple["DataFrame", "DataFrame"]:
-    if type in ["Hold-Out", "LeaveOneOut", "Temporal-LeaveOneOut"]:
+    if type in ["Hold-Out", "LeaveOneOut", "User-Hold-Out" ,"Temporal-LeaveOneOut"]:
         if type == 'Hold-Out':
             train, test = df.randomSplit([split, 1-split],seed=seed)
             test = test.orderBy('rating',ascending=False)
@@ -27,6 +29,28 @@ def splitting(df: DataFrame, type: str, seed: int, split=0.8, Session = None)-> 
             train = df.join(testDf,(df.userId==testDf.user) & (df.title_new!=testDf.item), 'inner').drop('user','item')
             test = df.join(testDf,(df.userId==testDf.user) & (df.title_new==testDf.item), 'inner').drop('user','item')
             return train, test #nel join si perde inspiegabilmente 9 interazioni
+        elif type == 'User-Hold-Out':
+            data = df.toPandas()
+            test = data.groupby('userId').sample(frac=(1-split))
+            train = data[~data.apply(tuple,1).isin(test.apply(tuple,1))]
+            # train = pd.concat([data,test]).drop_duplicates(keep=False)
+            return Session.createDataFrame(train), Session.createDataFrame(test)
+            # test['user'] = test['userId']
+            # test['item'] = test['title_new']
+            # test.drop(columns=['userId', 'title', 'rating', 'title_new'], inplace=True)
+            # l = df.select('userId').distinct().collect()
+            # print("\nStarting Leave-One-Out splitting methodology...\n")
+            # test = [[],[]]
+            # for i in tqdm(l):
+            #     itemBag = df.filter(df.userId==i[0]).select('title_new').collect()
+            #     test[0].append(i[0])
+            #     test[1].append(random.choice(itemBag)[0])
+            # testDf = Session.createDataFrame(test)
+            # train = df.join(testDf, (df.userId == testDf.user) & (df.title_new != testDf.item), 'inner').drop('user',
+            #                                                                                                   'item').distinct()
+            # test = df.join(testDf, (df.userId == testDf.user) & (df.title_new == testDf.item), 'inner').drop('user',
+            #                                                                                                  'item')
+            # return train, test  # nel join si perde inspiegabilmente 9 interazioni
         elif type == 'Temporal-LeaveOneOut':
             raise NotImplementedError
     else:

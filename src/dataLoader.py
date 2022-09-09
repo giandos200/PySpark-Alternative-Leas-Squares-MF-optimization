@@ -32,4 +32,4 @@ def dataLoader(Session, path: str, fileType: str, inferSchema: bool, header: boo
     model = stringIndexer.fit(df)
     mappedData = model.transform(df)
 
-    return mappedData
+    return mappedData, model
