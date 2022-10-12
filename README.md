@@ -2,6 +2,19 @@
 In this repository we reproduce the model proposed by Koren et al. ["Matrix Factorization Techniques for Recommender Systems"](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5197422), IEEE 2009. 
 We implement a classic Recommender Systems Pipeline, i.e., from item filtering (K-core) to model training-evaluation and recommendation in a PySpark scalable procedure.
 
+## Table of Contents
+- [Alternating Least Squares (ALS)](#alternating-least-squares-als)
+- [Sampling strategies](#sampling-strategies)
+- [K-core Filtering](#k-core-filtering)
+- [Splitting](#splitting)
+- [Training and Evaluation](#training-and-evaluation)
+- [Installation guidelines](#installation-guidelines)
+- [Train and test the model](#train-and-test-the-model)
+- [Results](#results)
+- [Example of Recommendation](#example-of-recommendation)
+- [Colab Notebooks](#colab-notebooks)
+- [Authors and Contributors](#authors-and-contributors)
+
 ## Alternating Least Squares (ALS)
 Alternative Least Squares (ALS) is a matrix-factorization optimization techniques to train sparse User-Item Rating matrix for scalability improvements.
 Let be:
@@ -51,7 +64,7 @@ $ pip install --upgrade pip
 $ pip install -r requirements.txt
 ```
 
-## Training and test the model
+## Train and test the model
 To train and evaluate ALS Recommender Systems with all the metrics, you may run the following command:
 
 ```bash
@@ -102,7 +115,7 @@ We chose a random user and display a Top-10
 ## Colab Notebooks
 You can run the experiments at this [link](https://colab.research.google.com/drive/1o18KCbRiM3xtNwtbCYw-_pdM47vdqzyO?usp=sharing).
 
-## Contributors
+## Authors and Contributors
 - [Giandomenico Cornacchia](https://github.com/giandos200)
 - [Daniele Malitesta](https://github.com/danielemalitesta)
 
