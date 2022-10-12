@@ -1,9 +1,6 @@
-# PySpark Alternating Least Squares implemetation with K-core preprocessing, different Splitting strategies and Evaluation metrics (cornacchia-malitesta-big-data)
-Reproduction of Koren, et al. ["Matrix Factorization Techniques for Rcommender Systems"](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5197422), IEEE 2009.
-The repositories implement a classic Recommender Systems Pipeline, i.e., from item filterin (K-core), to model training-evaluation and recommendation, in a PySpark scalable procedure.
-
-bla bla
-
+# PySpark Alternating Least Squares implemetation with K-core preprocessing, different Splitting strategies and Evaluation metrics
+In this repository we reproduce the model proposed by Koren et al. ["Matrix Factorization Techniques for Recommender Systems"](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5197422), IEEE 2009. 
+We implement a classic Recommender Systems Pipeline, i.e., from item filtering (K-core) to model training-evaluation and recommendation in a PySpark scalable procedure.
 
 # Alternating Least Squares (ALS)
 Alternative Least Squares is a matrix-factorization optimization techniques to train sparse User-Item Rating matrix for scalability improvements.
@@ -32,7 +29,7 @@ We implemented different Train/Test Splitting strategies for Training and Evalua
 
 ### Training and Evaluation
 We trained the ALS model available in pyspark.ml.recommendation on the train set, and we evaluate the performance on the test set on different metrics and different Top-N list of items recommended:
-- $RMSE$
+- <img src="https://latex.codecogs.com/svg.image?RMSE&space;=&space;\sqrt[2]{\left(&space;\frac{1}{|\mathbf{R}|}&space;\sum_{\hat{r}_{ui}\in&space;\mathbf{R}}(r_{ui}-\hat{r}_{ui})\right)&space;}"/>
 - $NDCG$
 - $Precision$
 - $Recall$
