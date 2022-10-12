@@ -2,42 +2,47 @@
 In this repository we reproduce the model proposed by Koren et al. ["Matrix Factorization Techniques for Recommender Systems"](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5197422), IEEE 2009. 
 We implement a classic Recommender Systems Pipeline, i.e., from item filtering (K-core) to model training-evaluation and recommendation in a PySpark scalable procedure.
 
-# Alternating Least Squares (ALS)
-Alternative Least Squares is a matrix-factorization optimization techniques to train sparse User-Item Rating matrix for scalability improvements.
+## Alternating Least Squares (ALS)
+Alternative Least Squares (ALS) is a matrix-factorization optimization techniques to train sparse User-Item Rating matrix for scalability improvements.
 Let be:
-- $\mathbf{x}_u \in \mathbf{R}^k$ a $k$ dimensional vectors as a latent representation of the user $u$;
-- $\mathbf{y}_i \in \mathbf{R}^k$ a $k$ dimensional vectors as a latent representation of the item $i$;
+- $\mathbf{x}_u \in \mathbf{R}^d$ a $d$ dimensional vector as a latent representation of the user $u$;
+- $\mathbf{y}_i \in \mathbf{R}^d$ a $d$ dimensional vector as a latent representation of the item $i$;
 - $\hat{r}_{ui} = \mathbf{x}_u^T \mathbf{y}_i$ the predicted user-item rating;
-- $\min_{x,y} \sum_{u,i} (r_{u,i}-\hat{r}_{u,i})^{2} + \lambda(|| \mathbf{x}_u ||^2 + || \mathbf{y}_i ||^2)$ be the objective function;
+- $\min\limits_{x,y} \sum\limits_{u,i} (r_{u,i}-\hat{r}_{u,i})^{2} + \lambda(|| \mathbf{x}_u ||^2 + || \mathbf{y}_i ||^2)$ be the objective function;
 
-ALS techniques rotate between fixing the $x_u$'s and fixing $y_i$'s.  When all $y_i$'s are fixed, the system recomputes the $x_u$’s by solving a least-squares problem, and vice versa. This ensures that each step decreases loss until convergence;
+ALS techniques rotate between fixing the $x_u$'s and fixing $y_i$'s. When all $y_i$'s are fixed, the system recomputes the $x_u$’s by solving a least-squares problem, and vice versa. This ensures that each step decreases loss until convergence;
 
-### Sampling strategies
-We implemented three type of samling strategies:
-- 'Interaction' which chose a percentage % of the interactions;
-- 'User' which chose a percentage % of interaction for each user;
-- 'Item' which chose a percentage % of interaction for each item;
+## Sampling strategies
+We implemented three type of sampling strategies:
+- 'Interaction' which chooses a percentage % of the interactions;
+- 'User' which chooses a percentage % of interaction for each user;
+- 'Item' which chooses a percentage % of interaction for each item.
 
-### K-core Filtering
+## K-core Filtering
 We iteratively filter the user and item with less than $K$ interactions until for each item and user we have a number of interaction $>K$.
 
-### Splitting
+## Splitting
 We implemented different Train/Test Splitting strategies for Training and Evaluating the Recommendation models
 - 'Hold-Out' dividing in train and test set based on all the interactions
 - 'User-Hold-Out' dividing in training and test set based on singular User interactions
 - 'Leave-One-Out' putting a random item of each user in the test set
 
-### Training and Evaluation
+## Training and Evaluation
 We trained the ALS model available in pyspark.ml.recommendation on the train set, and we evaluate the performance on the test set on different metrics and different Top-N list of items recommended:
-- <img src="https://latex.codecogs.com/svg.image?RMSE&space;=&space;\sqrt[2]{\left(&space;\frac{1}{|\mathbf{R}|}&space;\sum_{\hat{r}_{ui}\in&space;\mathbf{R}}(r_{ui}-\hat{r}_{ui})\right)&space;}"/>
-- $NDCG$
-- $Precision$
-- $Recall$
-- $MeanAveragePrecision$
+
+<img src="https://latex.codecogs.com/svg.image?RMSE&space;=&space;\sqrt{\left(&space;\frac{1}{|\mathcal{D}_{test}|}&space;\sum_{\hat{r}_{ui}\in&space;\mathcal{D}_{test}}(r_{ui}-\hat{r}_{ui})\right)&space;}"/>
+
+<img src="https://latex.codecogs.com/svg.image?\small&space;nDCG@N&space;=&space;\frac{1}{|\mathcal{U}|}\sum\limits_{u&space;\in&space;|\mathcal{U}|}\sum\limits_{i=1}^{N}&space;\frac{2^{rel(i)}&space;-&space;1}{log_2(i&plus;1)}&space;\quad&space;\text{with}\quad&space;rel(i)=1&space;\quad\text{if}\quad&space;Top@i&space;\in&space;\mathcal{I}_u^&plus;"/>
+
+<img src="https://latex.codecogs.com/svg.image?Precision@N&space;=&space;\frac{1}{|\mathcal{U}|}\sum\limits_{u&space;\in&space;|\mathcal{U}|}\frac{Top@N&space;\cap&space;\mathcal{I}_u}{N}"/>
+
+<img src="https://latex.codecogs.com/svg.image?Recall@N&space;=&space;\frac{1}{|\mathcal{U}|}\sum\limits_{u&space;\in&space;|\mathcal{U}|}\frac{Top@N&space;\cap&space;\mathcal{I}_u}{|\mathcal{I}_u|}"/>
+
+<img src="https://latex.codecogs.com/svg.image?\small&space;MeanAveragePrecision@N&space;=&space;\frac{1}{|\mathcal{U}|}&space;&space;\sum\limits_{u&space;\in&space;|\mathcal{U}|}&space;(AveragePrecision@N)_{u}&space;&space;"/>
 
 
-### Installation guidelines:
-Following, the instruction to install the correct packages for running the experiments (numba==0.48.0 is mandatory)
+## Installation guidelines:
+Following, the instruction to install the correct packages for running the experiments
 
 ```bash
 $ python3 -m venv venv_ALS
@@ -46,14 +51,14 @@ $ pip install --upgrade pip
 $ pip install -r requirements.txt
 ```
 
-### Training and test the model
+## Training and test the model
 To train and evaluate ALS Recommender Systems with all the metrics, you may run the following command:
 
 ```bash
 $ python -u main.py
 ```
 
-### Results
+## Results
 
 - $RMSE = 1.0280$
 
@@ -75,7 +80,7 @@ $ python -u main.py
 |     90 | 0.0760735  |  0.0371167  | 0.136286    |             0.0121385  |
 |    100 | 0.0824132  |  0.0370886  | 0.151604    |             0.0130137  |
 
-### Example of Recommendation
+## Example of Recommendation
 We chose a random user and display a Top-10
 
 - $user = 434$
@@ -94,10 +99,10 @@ We chose a random user and display a Top-10
 |      434 | 1028         |  Braindead (1992)                                            |
 |      434 | 688          |  Gigi (1958)                                                 |
 
-### Colab Notebooks
+## Colab Notebooks
 You can run the experiments at this [link](https://colab.research.google.com/drive/1o18KCbRiM3xtNwtbCYw-_pdM47vdqzyO?usp=sharing).
 
-### Contributors
+## Contributors
 - [Giandomenico Cornacchia](https://github.com/giandos200)
 - [Daniele Malitesta](https://github.com/danielemalitesta)
 
