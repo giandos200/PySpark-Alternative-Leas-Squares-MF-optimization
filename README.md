@@ -1,5 +1,5 @@
 # PySpark Alternating Least Squares implemetation with K-core preprocessing, different Splitting strategies and Evaluation metrics (cornacchia-malitesta-big-data)
-Reproduction of Koren, et al. ["Matrix Factorization Techniques for Rcommender Systems"]([https://dl.acm.org/doi/pdf/10.1145/3278721.3278779](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5197422)), AAAI 2018.
+Reproduction of Koren, et al. ["Matrix Factorization Techniques for Rcommender Systems"](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5197422), IEEE 2009.
 The repositories implement a classic Recommender Systems Pipeline, i.e., from item filterin (K-core), to model training-evaluation and recommendation, in a PySpark scalable procedure.
 
 bla bla
@@ -11,7 +11,7 @@ Let be:
 - $\mathbf{x}_u \in \mathbf{R}^k$ a $k$ dimensional vectors as a latent representation of the user $u$;
 - $\mathbf{y}_i \in \mathbf{R}^k$ a $k$ dimensional vectors as a latent representation of the item $i$;
 - $\hat{r}_{ui} = \mathbf{x}_u^T \mathbf{y}_i$ the predicted user-item rating;
-- $\min_{x,y} \sum_{u,i} (r_{u,i}-\hat{r}_{u,i})^{2} + \lambda(|| x_u ||^2 + || y_i ||^2)$ be the objective function;
+- $\min_{x,y} \sum_{u,i} (r_{u,i}-\hat{r}_{u,i})^{2} + \lambda(|| \mathbf{x}_u ||^2 + || \mathbf{y}_i ||^2)$ be the objective function;
 
 ALS techniques rotate between fixing the $x_u$'s and fixing $y_i$'s.  When all $y_i$'s are fixed, the system recomputes the $x_u$’s by solving a least-squares problem, and vice versa. This ensures that each step decreases loss until convergence;
 
@@ -58,6 +58,8 @@ $ python -u main.py
 
 ### Results
 
+- $RMSE = 1.0280$
+
 |   TopN |       NDCG |   Precision |      Recall |   MeanAveragePrecision |
 |--------|------------|-------------|-------------|------------------------|
 |      1 | 0.00632911 |  0.00632911 | 0.000205189 |             0.00632911 |
@@ -76,9 +78,27 @@ $ python -u main.py
 |     90 | 0.0760735  |  0.0371167  | 0.136286    |             0.0121385  |
 |    100 | 0.0824132  |  0.0370886  | 0.151604    |             0.0130137  |
 
+### Example of Recommendation
+We chose a random user and display a Top-10
+
+- $user = 434$
+
+
+|   userId |  title_new   | title                                                        |
+| -------- | ------------ | -------------------------------------------------------------|
+|      434 | 907          |  Candyman: Farewell to the Flesh (1995)                      |
+|      434 | 874          |  Microcosmos: Le peuple de l'herbe (1996)                    |
+|      434 | 928          |  Paradise Lost: The Child Murders at Robin Hood Hills (1996) |
+|      434 | 843          |  Love! Valour! Compassion! (1997)                            |
+|      434 | 847          |  Something to Talk About (1995)                              |
+|      434 | 687          |  Fallen (1998)                                               |
+|      434 | 557          |  Bad Boys (1995)                                             |
+|      434 | 913          | Miserables, Les (1995)                                       |
+|      434 | 1028         |  Braindead (1992)                                            |
+|      434 | 688          |  Gigi (1958)                                                 |
+
 ### Colab Notebooks
 You can run the experiments at this [link](https://colab.research.google.com/drive/1o18KCbRiM3xtNwtbCYw-_pdM47vdqzyO?usp=sharing).
-
 
 ### Contributors
 - [Giandomenico Cornacchia](https://github.com/giandos200)
