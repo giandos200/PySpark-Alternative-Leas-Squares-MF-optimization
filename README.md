@@ -99,7 +99,7 @@ We chose a random user and display a Top-10
 - $user = 434$
 
 
-|   userId |  title_new   | title                                                        |
+|   userId |  movied_id   | title                                                        |
 | -------- | ------------ | -------------------------------------------------------------|
 |      434 | 907          |  Candyman: Farewell to the Flesh (1995)                      |
 |      434 | 874          |  Microcosmos: Le peuple de l'herbe (1996)                    |
